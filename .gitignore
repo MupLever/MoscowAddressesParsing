@@ -1,2 +1,3 @@
-# Ignore json
+# Ignore json and json line
 *.json
+*.jl

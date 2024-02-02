@@ -12,7 +12,7 @@
 scrapy crawl legal_addresses -O addresses.jl
 ```
 
-### Linter
+### Linters
 ```
 black
 pylint

@@ -33,7 +33,8 @@ class LegalAddressesSpider(Spider):
         :param response: Ответ
         :return: Запрос
         """
-        districts = set(response.xpath("//table[@class='regions_list']/tr/td/p/a"))
+        #//div[@id='regions_by_letters']/table[@class='regions_list']/tbody/tr/td/p/a
+        districts = response.xpath("//div[@id='regions_by_letters']/table[@class='regions_list']/tr/td/p/a")
         for district in districts:
             district_name = district.xpath("./text()").get()
             district_url = district.xpath("./@href").get()
@@ -54,9 +55,8 @@ class LegalAddressesSpider(Spider):
         :return: Запрос
         """
         district = kwargs["district"]
-        streets = set(
-            response.xpath("//div[@class='double_block clearfix']/div/ul/li/a")
-        )
+        streets = response.xpath("//div[@class='double_block clearfix']/div/ul/li/a")
+
         for street in streets:
             street_name = street.xpath("./text()").get()
             street_url = street.xpath("./@href").get()
@@ -84,6 +84,9 @@ class LegalAddressesSpider(Spider):
         district = kwargs["district"]
         street = kwargs["street"]
         houses = response.xpath("//div[@id='content']/p[3]/a/text()").getall()
+        if houses and houses[-1].startswith("показать"):
+            houses.pop()
+            houses.extend(response.xpath("//div[@id='content']/p[3]/span/a/text()").getall() or [])
 
         yield {
             "district": district,
