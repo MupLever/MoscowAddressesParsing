@@ -33,7 +33,6 @@ class LegalAddressesSpider(Spider):
         :param response: Ответ
         :return: Запрос
         """
-        #//div[@id='regions_by_letters']/table[@class='regions_list']/tbody/tr/td/p/a
         districts = response.xpath("//div[@id='regions_by_letters']/table[@class='regions_list']/tr/td/p/a")
         for district in districts:
             district_name = district.xpath("./text()").get()

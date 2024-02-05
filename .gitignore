@@ -1,3 +1,7 @@
 # Ignore json and json line
 *.json
 *.jl
+
+# Ignore __pycache__
+mosopen/__pycache__
+mosopen/spiders/__pycache__
