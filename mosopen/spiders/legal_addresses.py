@@ -69,7 +69,23 @@ class LegalAddressesSpider(Spider):
             )
 
     @staticmethod
-    def parse_houses(response: Response, **kwargs: Any) -> dict:
+    def _correct_house_number(house_number):
+        house_number = re.sub(r"[ |\xa0]", " ", house_number)
+        house_number = re.sub(r" стр ", "с", house_number)
+        house_number = re.sub(r" кор ", "к", house_number)
+        house_number = re.sub(r" / ", "/", house_number)
+        return house_number
+
+    @staticmethod
+    def _correct_street_name(street_name):
+        if ", " in street_name:
+            split_street = street_name.split(", ")
+            split_street = split_street.reverse()
+            street_name = " ".join(split_street)
+
+        return street_name
+
+    def parse_houses(self, response: Response, **kwargs: Any) -> dict:
         """
         Отдает данные по каждой улице в своем районе
         :param response: Ответ
@@ -89,6 +105,6 @@ class LegalAddressesSpider(Spider):
 
         yield {
             "district": district,
-            "street": street,
-            "houses": list(map(lambda house: re.sub(r"[ |\xa0]", " ", house), houses)),
+            "street": self._correct_street_name(street),
+            "houses": list(map(self._correct_house_number, houses)),
         }
